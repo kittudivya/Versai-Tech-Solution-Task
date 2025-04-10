@@ -1,0 +1,142 @@
+// File: src/components/AuthForm.jsx
+import React, { useState } from 'react';
+import InputGroup from './InputGroup';
+
+const AuthForm = ({ type = 'login', onSubmit }) => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    onSubmit({ email, password });
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-4 p-4 max-w-md mx-auto">
+      <h2 className="text-xl font-semibold text-center capitalize">{type}</h2>
+      <InputGroup label="Email" type="email" value={email} onChange={e => setEmail(e.target.value)} />
+      <InputGroup label="Password" type="password" value={password} onChange={e => setPassword(e.target.value)} />
+      <button type="submit" className="w-full bg-blue-600 text-white py-2 rounded-xl">Submit</button>
+    </form>
+  );
+};
+
+export default AuthForm;
+
+// File: src/components/InputGroup.jsx
+import React from 'react';
+
+const InputGroup = ({ label, type, value, onChange }) => {
+  return (
+    <div className="flex flex-col gap-1">
+      <label className="text-sm font-medium">{label}</label>
+      <input
+        type={type}
+        value={value}
+        onChange={onChange}
+        className="p-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400"
+      />
+    </div>
+  );
+};
+
+export default InputGroup;
+
+// File: src/components/OrderItemCard.jsx
+import React from 'react';
+
+const OrderItemCard = ({ order }) => {
+  return (
+    <div className="border p-4 rounded-xl shadow-sm">
+      <h3 className="font-semibold">Order #{order.id}</h3>
+      <p>Status: {order.status}</p>
+      <p>Total: ${order.total}</p>
+    </div>
+  );
+};
+
+export default OrderItemCard;
+
+// File: src/pages/Login.jsx
+import React from 'react';
+import AuthForm from '../components/AuthForm';
+
+const Login = () => {
+  const handleLogin = (credentials) => {
+    console.log('Logging in with', credentials); // Replace with API call later
+  };
+
+  return <AuthForm type="login" onSubmit={handleLogin} />;
+};
+
+export default Login;
+
+// File: src/pages/Register.jsx
+import React from 'react';
+import AuthForm from '../components/AuthForm';
+
+const Register = () => {
+  const handleRegister = (data) => {
+    console.log('Registering with', data);
+  };
+
+  return <AuthForm type="register" onSubmit={handleRegister} />;
+};
+
+export default Register;
+
+// File: src/pages/ForgotPassword.jsx
+import React, { useState } from 'react';
+import InputGroup from '../components/InputGroup';
+
+const ForgotPassword = () => {
+  const [email, setEmail] = useState('');
+
+  const handleReset = (e) => {
+    e.preventDefault();
+    console.log('Password reset for', email);
+  };
+
+  return (
+    <form onSubmit={handleReset} className="space-y-4 p-4 max-w-md mx-auto">
+      <h2 className="text-xl font-semibold text-center">Forgot Password</h2>
+      <InputGroup label="Email" type="email" value={email} onChange={e => setEmail(e.target.value)} />
+      <button type="submit" className="w-full bg-blue-600 text-white py-2 rounded-xl">Reset Password</button>
+    </form>
+  );
+};
+
+export default ForgotPassword;
+
+// File: src/pages/Dashboard.jsx
+import React from 'react';
+import OrderItemCard from '../components/OrderItemCard';
+
+const mockOrders = [
+  { id: 101, status: 'Delivered', total: 39.99 },
+  { id: 102, status: 'Processing', total: 19.49 },
+];
+
+const Dashboard = () => {
+  return (
+    <div className="p-4 space-y-6">
+      <h1 className="text-2xl font-bold">Dashboard</h1>
+      <section>
+        <h2 className="text-lg font-semibold mb-2">Order History</h2>
+        <div className="space-y-3">
+          {mockOrders.map(order => <OrderItemCard key={order.id} order={order} />)}
+        </div>
+      </section>
+      <section>
+        <h2 className="text-lg font-semibold mt-6 mb-2">Update Profile</h2>
+        <form className="space-y-4">
+          <InputGroup label="Name" type="text" value="John Doe" onChange={() => {}} />
+          <InputGroup label="Email" type="email" value="john@example.com" onChange={() => {}} />
+          <button type="submit" className="w-full bg-green-600 text-white py-2 rounded-xl">Update Profile</button>
+        </form>
+      </section>
+    </div>
+  );
+};
+
+export default Dashboard;
